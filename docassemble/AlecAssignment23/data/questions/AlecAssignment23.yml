@@ -9,6 +9,14 @@ objects:
 ---
 mandatory: True
 code: |
+  user.name.first
+  some_date
+  other.target_number
+  others_accurate
+  num_dogs
+  over_eighteen
+  legal_issues
+  legal_aid
 ---
 mandatory: True
 question: |
@@ -28,7 +36,6 @@ fields:
   - Date: some_date
     datatype: date
 ---
-mandatory: True
 question: |
   Hello, ${ user.name.first } ${ user.name.last }.
 subquestion: |
@@ -38,14 +45,9 @@ fields:
    datatype: integer
    min: 1
 ---
-mandatory: True
 generic object: DAList
 question: |
   We need to know a bit about the ${ ordinal(i) } person.
-subquestion: |
-  % if other.number_gathered() > 0:
-  So far, you have mentioned ${ other }.
-  % endif
 fields:
   - First Name: other[i].name.first
   - Last Name: other[i].name.last
@@ -54,11 +56,18 @@ question: |
   Are there any more people?
 yesno: other.there_is_another
 ---
+question:  |
+ You have ${ other.number_as_word() } other people living with you.
+ They are ${ other }.
+subquestion: |
+  Is this accurate?
+yesno: others_accurate
+---
+mandatory: True
 question: |
   Are you at least 18 years of age?
 yesno: over_eighteen
 ---
-mandatory: True
 question: |
   How many dogs do you have?
 fields:
@@ -95,11 +104,12 @@ yesno: legal_aid
 question: |
   Please sign to confirm that everything you have told us is truthful.
 subquestion: |
-  By signing your name, you agree to   our terms and conditions.
-signature: target_variable
+  By signing your name, you agree to our terms and conditions.
+signature: user.signature
 under: |
   ${ user }
 ---
+mandatory: True
 question: |
   Based on your responses, we've prepared the attached memo.
 attachment:
